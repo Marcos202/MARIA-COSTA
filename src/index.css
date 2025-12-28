@@ -1,0 +1,43 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap');
+
+@import "tailwindcss";
+
+@theme {
+  --color-rosa-cha: #F4C2C2;
+  --color-rosa-antigo: #D18E9F;
+  --color-rosa-claro: #FDE4E4;
+  --color-rosa-forte: #B45F74;
+
+  --color-offwhite: #FAF9F6;
+
+  /* Gold scale */
+  --color-gold: #D4AF37;
+  --color-gold-light: #F2D675;
+  --color-gold-dark: #AA8C2C;
+
+  --color-terra: #8D6E63;
+
+  --font-serif: "Playfair Display", serif;
+  --font-sans: "Inter", sans-serif;
+
+  --background-image-paper-texture: url('https://www.transparenttextures.com/patterns/cream-paper.png');
+}
+
+@layer base {
+  body {
+    @apply bg-offwhite text-slate-800 font-sans antialiased relative min-h-screen;
+    background-image:
+      linear-gradient(to bottom, rgba(250, 249, 246, 0.95), rgba(253, 251, 247, 0.95)),
+      var(--background-image-paper-texture);
+    background-attachment: fixed;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply font-serif;
+  }
+}
