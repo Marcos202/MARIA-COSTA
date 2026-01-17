@@ -88,44 +88,71 @@ export const Home = () => {
             </header>
 
             {/* Location Section - Estilo Editorial Minimalista */}
+            {/* Location Section - Estilo Editorial Minimalista */}
             <section className="relative z-10 py-24 px-4">
                 <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
                     transition={{ duration: 0.8 }}
-                    className="max-w-4xl mx-auto flex flex-col items-center text-center"
+                    className="max-w-6xl mx-auto flex flex-col items-center text-center"
                 >
-                    {/* Icon - MapPin simples e fino */}
-                    <div className="text-rosa-forte mb-6">
-                        <MapPin size={32} strokeWidth={1.5} />
+                    {/* Icon & Label */}
+                    <div className="flex flex-col items-center mb-12">
+                        <div className="text-rosa-forte mb-4">
+                            <MapPin size={32} strokeWidth={1.5} />
+                        </div>
+                        <span className="text-sm font-sans tracking-[0.3em] text-gold-dark uppercase opacity-80">
+                            Localização
+                        </span>
                     </div>
 
-                    {/* Rótulo - Minimalista e Tracking largo */}
-                    <span className="text-sm font-sans tracking-[0.3em] text-gold-dark uppercase mb-4 opacity-80">
-                        Localização
-                    </span>
+                    {/* Grid de Eventos */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8 w-full">
+                        {/* Evento 1: Sábado */}
+                        <div className="flex flex-col items-center p-8 bg-white/50 backdrop-blur-sm rounded-3xl border border-white/60 shadow-lg hover:shadow-xl transition-all">
+                            <span className="inline-block px-4 py-1 rounded-full bg-rosa-cha/10 text-rosa-forte text-sm font-bold tracking-wide mb-6">
+                                14/02 • SÁBADO • 19h
+                            </span>
+                            <h3 className="font-serif text-3xl md:text-4xl text-gray-800 mb-3 tracking-tight">
+                                Espaço Garden Eventos
+                            </h3>
+                            <p className="text-lg text-stone-600 font-sans font-light mb-8 max-w-xs leading-relaxed">
+                                Tucumã – PA
+                            </p>
+                            <a
+                                href="https://maps.app.goo.gl/z42eB8HUwHMHM51HA"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="group relative flex items-center gap-2 text-gray-800 font-sans tracking-wide text-sm border border-stone-300 px-6 py-2.5 rounded-full hover:bg-gray-800 hover:text-white hover:border-gray-800 transition-all duration-300 ease-in-out"
+                            >
+                                Ver no Google Maps
+                                <ExternalLink size={14} className="opacity-60 transition-transform duration-300 group-hover:translate-x-1 group-hover:-translate-y-1 group-hover:opacity-100" />
+                            </a>
+                        </div>
 
-                    {/* Nome do Local - Serifado e Imponente */}
-                    <h3 className="font-serif text-4xl md:text-5xl lg:text-6xl text-gray-800 mb-4 tracking-tight">
-                        Sítio Nova Vida
-                    </h3>
-
-                    {/* Endereço - Clean Sans Serif */}
-                    <p className="text-lg md:text-xl text-stone-600 font-sans font-light mb-10 max-w-lg leading-relaxed">
-                        Vila Ladeira Vermelha, Pará
-                    </p>
-
-                    {/* CTA Button - Ghost/Minimalist Link */}
-                    <a
-                        href="https://maps.app.goo.gl/ZVbXYaFRqoQPygrUA"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="group relative flex items-center gap-2 text-gray-800 font-sans tracking-wide text-sm md:text-base border border-stone-300 px-8 py-3 rounded-full hover:bg-gray-800 hover:text-white hover:border-gray-800 transition-all duration-500 ease-in-out"
-                    >
-                        Ver no Google Maps
-                        <ExternalLink size={16} className="opacity-60 transition-transform duration-300 group-hover:translate-x-1 group-hover:-translate-y-1 group-hover:opacity-100" />
-                    </a>
+                        {/* Evento 2: Domingo */}
+                        <div className="flex flex-col items-center p-8 bg-white/50 backdrop-blur-sm rounded-3xl border border-white/60 shadow-lg hover:shadow-xl transition-all">
+                            <span className="inline-block px-4 py-1 rounded-full bg-rosa-cha/10 text-rosa-forte text-sm font-bold tracking-wide mb-6">
+                                15/02 • DOMINGO • 12h
+                            </span>
+                            <h3 className="font-serif text-3xl md:text-4xl text-gray-800 mb-3 tracking-tight">
+                                Sítio Nova Vida
+                            </h3>
+                            <p className="text-lg text-stone-600 font-sans font-light mb-8 max-w-xs leading-relaxed">
+                                Vila Ladeira Vermelha, Pará
+                            </p>
+                            <a
+                                href="https://maps.app.goo.gl/ZVbXYaFRqoQPygrUA"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="group relative flex items-center gap-2 text-gray-800 font-sans tracking-wide text-sm border border-stone-300 px-6 py-2.5 rounded-full hover:bg-gray-800 hover:text-white hover:border-gray-800 transition-all duration-300 ease-in-out"
+                            >
+                                Ver no Google Maps
+                                <ExternalLink size={14} className="opacity-60 transition-transform duration-300 group-hover:translate-x-1 group-hover:-translate-y-1 group-hover:opacity-100" />
+                            </a>
+                        </div>
+                    </div>
                 </motion.div>
             </section>
 

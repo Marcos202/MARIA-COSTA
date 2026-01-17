@@ -76,23 +76,54 @@ export const ConfirmationPage = () => {
                             Será um prazer imenso ter você conosco neste dia tão especial para a <span className="font-serif italic text-rosa-forte">Dona Maria</span>.
                         </p>
 
-                        <div className="bg-gradient-to-br from-white to-gray-50 p-6 rounded-2xl border border-rosa-cha/30 shadow-sm mb-8 text-left relative overflow-hidden group hover:border-rosa-antigo transition-colors">
-                            <div className="absolute top-0 left-0 w-1 h-full bg-rosa-forte" />
-                            <div className="flex items-start gap-4">
-                                <div className="p-2 bg-white rounded-lg shadow-sm text-rosa-forte">
-                                    <MapPin size={24} />
+                        <div className="space-y-4 mb-8">
+                            {/* Card Evento 1 */}
+                            <div className="bg-gradient-to-br from-white to-gray-50 p-5 rounded-2xl border border-rosa-cha/30 shadow-sm text-left relative overflow-hidden group hover:border-rosa-antigo transition-colors">
+                                <div className="absolute top-0 left-0 w-1 h-full bg-rosa-forte" />
+                                <div className="flex items-start gap-4">
+                                    <div className="p-2 bg-white rounded-lg shadow-sm text-rosa-forte shrink-0">
+                                        <MapPin size={24} />
+                                    </div>
+                                    <div>
+                                        <span className="block text-xs font-bold text-rosa-forte uppercase tracking-wider mb-1 opacity-90">
+                                            14/02 • Sábado • 19h
+                                        </span>
+                                        <h3 className="font-serif font-bold text-gray-800 text-lg leading-tight mb-1">Espaço Garden Eventos</h3>
+                                        <p className="text-gray-500 text-sm mb-3">Tucumã – PA</p>
+                                        <a
+                                            href="https://maps.app.goo.gl/z42eB8HUwHMHM51HA"
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="inline-flex items-center text-xs font-bold text-gray-600 hover:text-rosa-forte uppercase tracking-wider hover:underline transition-colors gap-1"
+                                        >
+                                            Ver no Mapa
+                                        </a>
+                                    </div>
                                 </div>
-                                <div>
-                                    <h3 className="font-serif font-bold text-gray-800 text-lg">Sítio Recanto das Flores</h3>
-                                    <p className="text-gray-500 text-sm mb-3">Vila Ladeira Vermelha, Pará</p>
-                                    <a
-                                        href="https://maps.app.goo.gl/ZVbXYaFRqoQPygrUA"
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className="inline-flex items-center text-xs font-bold text-rosa-forte uppercase tracking-wider hover:underline"
-                                    >
-                                        Abrir no GPS
-                                    </a>
+                            </div>
+
+                            {/* Card Evento 2 */}
+                            <div className="bg-gradient-to-br from-white to-gray-50 p-5 rounded-2xl border border-rosa-cha/30 shadow-sm text-left relative overflow-hidden group hover:border-rosa-antigo transition-colors">
+                                <div className="absolute top-0 left-0 w-1 h-full bg-rosa-forte" />
+                                <div className="flex items-start gap-4">
+                                    <div className="p-2 bg-white rounded-lg shadow-sm text-rosa-forte shrink-0">
+                                        <MapPin size={24} />
+                                    </div>
+                                    <div>
+                                        <span className="block text-xs font-bold text-rosa-forte uppercase tracking-wider mb-1 opacity-90">
+                                            15/02 • Domingo • 12h
+                                        </span>
+                                        <h3 className="font-serif font-bold text-gray-800 text-lg leading-tight mb-1">Sítio Nova Vida</h3>
+                                        <p className="text-gray-500 text-sm mb-3">Vila Ladeira Vermelha, Pará</p>
+                                        <a
+                                            href="https://maps.app.goo.gl/ZVbXYaFRqoQPygrUA"
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="inline-flex items-center text-xs font-bold text-gray-600 hover:text-rosa-forte uppercase tracking-wider hover:underline transition-colors gap-1"
+                                        >
+                                            Ver no Mapa
+                                        </a>
+                                    </div>
                                 </div>
                             </div>
                         </div>
