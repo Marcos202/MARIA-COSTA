@@ -1,11 +1,11 @@
 import { useState } from 'react';
 import { Menu, Lock } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 export const NavigationMenu = () => {
     const [isOpen, setIsOpen] = useState(false);
-    const navigate = useNavigate();
+
 
     return (
         <div className="fixed top-6 right-6 z-50 flex flex-col items-end print:hidden">
@@ -26,13 +26,11 @@ export const NavigationMenu = () => {
                         animate={{ opacity: 1, y: 0, scale: 1 }}
                         exit={{ opacity: 0, y: -10, scale: 0.95 }}
                         transition={{ duration: 0.2, ease: "easeOut" }}
-                        className="absolute top-full right-0 mt-2 w-48 bg-white rounded-xl shadow-lg p-2 border border-gray-100 origin-top-right"
+                        className="absolute top-full right-0 mt-2 w-48 bg-white rounded-xl shadow-lg p-2 border border-gray-100 origin-top-right z-50"
                     >
-                        <button
-                            onClick={() => {
-                                setIsOpen(false);
-                                navigate('/admin');
-                            }}
+                        <Link
+                            to="/admin"
+                            onClick={() => setIsOpen(false)}
                             className="flex items-center gap-3 w-full p-2 rounded-lg hover:bg-rosa-claro/30 text-stone-600 hover:text-rosa-forte transition-colors group text-left"
                             role="menuitem"
                         >
@@ -40,7 +38,7 @@ export const NavigationMenu = () => {
                                 <Lock size={16} />
                             </div>
                             <span className="text-sm font-medium">Login</span>
-                        </button>
+                        </Link>
                     </motion.div>
                 )}
             </AnimatePresence>

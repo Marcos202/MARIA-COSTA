@@ -24,6 +24,27 @@ export const RSVPModal = ({ isOpen, onClose, onSuccess }: RSVPModalProps) => {
     const [idade, setIdade] = useState('');
     const [vaiComparecer, setVaiComparecer] = useState(true);
     const [mensagem, setMensagem] = useState('');
+    const [frequenciaVisita, setFrequenciaVisita] = useState('');
+
+    // Mapeamento de textos reflexivos por frequência
+    const frequenciaTextos: Record<string, { texto: string; reflexao: string }> = {
+        'Todo mês': {
+            texto: 'Ver Maria todos os meses é um gesto de amor, honra e cuidado. Poucos têm esse privilégio. Sua presença transforma dias comuns em memórias que atravessam gerações.',
+            reflexao: 'Presença é amor em forma de tempo. E o tempo que você oferece hoje se transforma em eternidade na memória.'
+        },
+        'Uma vez por ano': {
+            texto: 'Visitar Maria apenas uma vez por ano significa que existe cerca de 33% de chance de não revê-la no próximo ano. Em outras palavras, a cada despedida, há uma possibilidade real de ela ser a última. O tempo não avisa quando decide encerrar um ciclo.',
+            reflexao: 'O tempo não tira pessoas da nossa vida. Ele apenas revela quantas vezes deixamos para depois.'
+        },
+        'A cada 2 anos': {
+            texto: 'Estatísticas indicam cerca de 50% de chance de não haver um novo reencontro. Isso significa que metade das pessoas dessa idade não chega ao próximo abraço. O "até a próxima" pode nunca chegar.',
+            reflexao: 'Algumas ausências não são falta de amor, são excesso de adiamento.'
+        },
+        'Mais de 3 anos': {
+            texto: 'Dados mostram que a chance de não vê-la novamente pode superar 60%. Estatisticamente, a ausência se torna mais provável que o reencontro. E algumas despedidas acontecem sem que a gente saiba que foram finais.',
+            reflexao: 'O silêncio mais doloroso não é o da despedida, é o do arrependimento.'
+        }
+    };
 
     // Dynamic guests state
     const [guestCount, setGuestCount] = useState(0);
@@ -73,6 +94,12 @@ export const RSVPModal = ({ isOpen, onClose, onSuccess }: RSVPModalProps) => {
                 })
                 .join(', ');
 
+            // Concatenar frequência de visita na mensagem (apenas quando não vai comparecer)
+            let mensagemFinal = mensagem;
+            if (!vaiComparecer && frequenciaVisita) {
+                mensagemFinal = `${mensagem}\n\n[Frequência de visita: ${frequenciaVisita}]`;
+            }
+
             const { error } = await supabase
                 .from('convidados')
                 .insert([{
@@ -81,7 +108,7 @@ export const RSVPModal = ({ isOpen, onClose, onSuccess }: RSVPModalProps) => {
                     vai_comparecer: vaiComparecer,
                     qtd_acompanhantes: vaiComparecer ? guestCount : 0,
                     nomes_acompanhantes: (vaiComparecer && guestCount > 0) ? formattedGuestNames : null,
-                    mensagem_justificativa: mensagem
+                    mensagem_justificativa: mensagemFinal
                 }]);
 
             if (error) throw error;
@@ -109,6 +136,7 @@ export const RSVPModal = ({ isOpen, onClose, onSuccess }: RSVPModalProps) => {
         setIdade('');
         setVaiComparecer(true);
         setMensagem('');
+        setFrequenciaVisita('');
         setGuestCount(0);
         setGuests([]);
     };
@@ -272,16 +300,62 @@ export const RSVPModal = ({ isOpen, onClose, onSuccess }: RSVPModalProps) => {
                                             initial={{ opacity: 0, height: 0 }}
                                             animate={{ opacity: 1, height: 'auto' }}
                                             exit={{ opacity: 0, height: 0 }}
-                                            className="overflow-hidden"
+                                            className="overflow-hidden space-y-4"
                                         >
-                                            <label className="block text-sm font-medium text-gray-700 mb-1">Deixe uma mensagem para a Maria</label>
-                                            <textarea
-                                                required
-                                                rows={3}
-                                                className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-rosa-antigo focus:border-transparent outline-none transition-all resize-none"
-                                                value={mensagem}
-                                                onChange={e => setMensagem(e.target.value)}
-                                            />
+                                            {/* Seção de Frequência de Visita */}
+                                            <div className="pt-2 border-t border-gray-100">
+                                                <label className="block text-sm font-medium text-gray-700 mb-2">
+                                                    Com que frequência você costuma ver a Maria Costa?
+                                                </label>
+                                                <select
+                                                    value={frequenciaVisita}
+                                                    onChange={e => setFrequenciaVisita(e.target.value)}
+                                                    className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-rosa-antigo focus:border-transparent outline-none transition-all bg-white text-gray-700"
+                                                >
+                                                    <option value="">Selecione uma opção...</option>
+                                                    <option value="Todo mês">Todo mês</option>
+                                                    <option value="Uma vez por ano">Uma vez por ano</option>
+                                                    <option value="A cada 2 anos">A cada 2 anos</option>
+                                                    <option value="Mais de 3 anos">Mais de 3 anos</option>
+                                                </select>
+                                            </div>
+
+                                            {/* Bloco de Texto Reflexivo (aparece ao selecionar) */}
+                                            <AnimatePresence>
+                                                {frequenciaVisita && frequenciaTextos[frequenciaVisita] && (
+                                                    <motion.div
+                                                        initial={{ opacity: 0, y: -10 }}
+                                                        animate={{ opacity: 1, y: 0 }}
+                                                        exit={{ opacity: 0, y: -10 }}
+                                                        transition={{ duration: 0.3 }}
+                                                        className="bg-stone-50 border border-stone-200 rounded-xl p-4 space-y-3"
+                                                    >
+                                                        <p className="text-sm text-stone-700 leading-relaxed">
+                                                            {frequenciaTextos[frequenciaVisita].texto}
+                                                        </p>
+                                                        <div className="border-t border-stone-200 pt-3">
+                                                            <p className="text-sm italic text-rosa-forte font-medium leading-relaxed">
+                                                                "{frequenciaTextos[frequenciaVisita].reflexao}"
+                                                            </p>
+                                                        </div>
+                                                    </motion.div>
+                                                )}
+                                            </AnimatePresence>
+
+                                            {/* Campo de Mensagem */}
+                                            <div>
+                                                <label className="block text-sm font-medium text-gray-700 mb-1">
+                                                    Deixe uma mensagem para a Maria
+                                                </label>
+                                                <textarea
+                                                    required
+                                                    rows={3}
+                                                    placeholder="Escreva algo especial para ela..."
+                                                    className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-rosa-antigo focus:border-transparent outline-none transition-all resize-none"
+                                                    value={mensagem}
+                                                    onChange={e => setMensagem(e.target.value)}
+                                                />
+                                            </div>
                                         </motion.div>
                                     )}
                                 </AnimatePresence>
