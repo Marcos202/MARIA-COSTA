@@ -1,5 +1,5 @@
 export interface Convidado {
-    id: number;
+    id: string;  // UUID do Supabase
     created_at: string;
     nome_completo: string;
     idade: number | null;

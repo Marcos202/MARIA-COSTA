@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabaseClient';
 import type { Convidado } from '../types';
-import { Users, UserMinus, Clock, Search, Lock } from 'lucide-react';
+import { Users, UserMinus, Clock, Search, Lock, Trash2 } from 'lucide-react';
 
 export const Dashboard = () => {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -40,6 +40,22 @@ export const Dashboard = () => {
             setIsAuthenticated(true);
         } else {
             alert("Senha incorreta");
+        }
+    };
+
+    const handleDelete = async (id: string) => {
+        if (!window.confirm("Tem certeza que deseja remover este convidado?")) return;
+
+        const { error } = await supabase
+            .from('convidados')
+            .delete()
+            .eq('id', id);
+
+        if (error) {
+            console.error('Erro ao deletar:', error);
+            alert("Erro ao excluir convidado.");
+        } else {
+            setConvidados(prev => prev.filter(c => c.id !== id));
         }
     };
 
@@ -146,11 +162,12 @@ export const Dashboard = () => {
                                 <th className="px-6 py-3">Status</th>
                                 <th className="px-6 py-3">Acompanhantes</th>
                                 <th className="px-6 py-3">Mensagem</th>
+                                <th className="px-6 py-3">Ações</th>
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-gray-100">
                             {loading ? (
-                                <tr><td colSpan={5} className="px-6 py-8 text-center text-gray-500">Carregando...</td></tr>
+                                <tr><td colSpan={6} className="px-6 py-8 text-center text-gray-500">Carregando...</td></tr>
                             ) : filteredConvidados.map((c) => (
                                 <tr key={c.id} className="hover:bg-gray-50 transition-colors">
                                     <td className="px-6 py-3 font-medium text-gray-900">{c.nome_completo}</td>
@@ -174,10 +191,19 @@ export const Dashboard = () => {
                                     <td className="px-6 py-3 text-gray-500 max-w-xs truncate" title={c.mensagem_justificativa || ''}>
                                         {c.mensagem_justificativa || '-'}
                                     </td>
+                                    <td className="px-6 py-3">
+                                        <button
+                                            onClick={() => handleDelete(c.id)}
+                                            className="p-1 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors"
+                                            title="Excluir"
+                                        >
+                                            <Trash2 size={18} />
+                                        </button>
+                                    </td>
                                 </tr>
                             ))}
                             {!loading && filteredConvidados.length === 0 && (
-                                <tr><td colSpan={5} className="px-6 py-8 text-center text-gray-500">Nenhum registro encontrado.</td></tr>
+                                <tr><td colSpan={6} className="px-6 py-8 text-center text-gray-500">Nenhum registro encontrado.</td></tr>
                             )}
                         </tbody>
                     </table>
