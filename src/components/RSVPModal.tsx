@@ -25,6 +25,7 @@ export const RSVPModal = ({ isOpen, onClose, onSuccess }: RSVPModalProps) => {
     const [vaiComparecer, setVaiComparecer] = useState(true);
     const [mensagem, setMensagem] = useState('');
     const [frequenciaVisita, setFrequenciaVisita] = useState('');
+    const [frequenciaError, setFrequenciaError] = useState(false);
 
     // Mapeamento de textos reflexivos por frequência
     const frequenciaTextos: Record<string, { texto: string; reflexao: string }> = {
@@ -83,6 +84,12 @@ export const RSVPModal = ({ isOpen, onClose, onSuccess }: RSVPModalProps) => {
             }
         }
 
+        // Validation: Check if frequency is selected when not attending
+        if (!vaiComparecer && !frequenciaVisita) {
+            setFrequenciaError(true);
+            return;
+        }
+
         setLoading(true);
 
         try {
@@ -137,6 +144,7 @@ export const RSVPModal = ({ isOpen, onClose, onSuccess }: RSVPModalProps) => {
         setVaiComparecer(true);
         setMensagem('');
         setFrequenciaVisita('');
+        setFrequenciaError(false);
         setGuestCount(0);
         setGuests([]);
     };
@@ -302,47 +310,91 @@ export const RSVPModal = ({ isOpen, onClose, onSuccess }: RSVPModalProps) => {
                                             exit={{ opacity: 0, height: 0 }}
                                             className="overflow-hidden space-y-4"
                                         >
-                                            {/* Seção de Frequência de Visita */}
+                                            {/* Seção de Frequência de Visita - Radio Group Accordion */}
                                             <div className="pt-2 border-t border-gray-100">
-                                                <label className="block text-sm font-medium text-gray-700 mb-2">
-                                                    Com que frequência você costuma ver a Maria Costa?
+                                                <label className={`block text-sm font-medium mb-3 transition-colors ${frequenciaError ? 'text-red-500' : 'text-gray-700'}`}>
+                                                    Com que frequência você costuma ver a Maria Costa? <span className="text-rosa-forte">*</span>
                                                 </label>
-                                                <select
-                                                    value={frequenciaVisita}
-                                                    onChange={e => setFrequenciaVisita(e.target.value)}
-                                                    className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-rosa-antigo focus:border-transparent outline-none transition-all bg-white text-gray-700"
-                                                >
-                                                    <option value="">Selecione uma opção...</option>
-                                                    <option value="Todo mês">Todo mês</option>
-                                                    <option value="Uma vez por ano">Uma vez por ano</option>
-                                                    <option value="A cada 2 anos">A cada 2 anos</option>
-                                                    <option value="Mais de 3 anos">Mais de 3 anos</option>
-                                                </select>
-                                            </div>
 
-                                            {/* Bloco de Texto Reflexivo (aparece ao selecionar) */}
-                                            <AnimatePresence>
-                                                {frequenciaVisita && frequenciaTextos[frequenciaVisita] && (
-                                                    <motion.div
-                                                        initial={{ opacity: 0, y: -10 }}
+                                                <div className={`space-y-3 ${frequenciaError ? 'p-2 border border-red-200 rounded-xl bg-red-50/30' : ''}`}>
+                                                    {['Todo mês', 'Uma vez por ano', 'A cada 2 anos', 'Mais de 3 anos'].map((opcao) => {
+                                                        const isSelected = frequenciaVisita === opcao;
+
+                                                        return (
+                                                            <div key={opcao} className="flex flex-col">
+                                                                <label
+                                                                    className={`flex items-center gap-3 p-3 rounded-lg border cursor-pointer transition-all ${isSelected
+                                                                        ? 'bg-rosa-claro/30 border-rosa-antigo shadow-sm'
+                                                                        : 'bg-white border-gray-200 hover:border-rosa-cha hover:bg-gray-50'
+                                                                        }`}
+                                                                >
+                                                                    <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center transition-all flex-shrink-0 ${isSelected
+                                                                        ? 'border-rosa-forte'
+                                                                        : 'border-gray-300'
+                                                                        }`}>
+                                                                        {isSelected && (
+                                                                            <div className="w-2.5 h-2.5 rounded-full bg-rosa-forte" />
+                                                                        )}
+                                                                    </div>
+                                                                    <input
+                                                                        type="radio"
+                                                                        name="frequenciaVisita"
+                                                                        value={opcao}
+                                                                        checked={isSelected}
+                                                                        onChange={(e) => {
+                                                                            setFrequenciaVisita(e.target.value);
+                                                                            setFrequenciaError(false);
+                                                                        }}
+                                                                        className="sr-only"
+                                                                    />
+                                                                    <span className={`text-sm font-medium ${isSelected
+                                                                        ? 'text-rosa-forte'
+                                                                        : 'text-gray-600'
+                                                                        }`}>
+                                                                        {opcao}
+                                                                    </span>
+                                                                </label>
+
+                                                                {/* Texto Reflexivo (Accordion) */}
+                                                                <AnimatePresence>
+                                                                    {isSelected && frequenciaTextos[opcao] && (
+                                                                        <motion.div
+                                                                            initial={{ opacity: 0, height: 0, marginTop: 0 }}
+                                                                            animate={{ opacity: 1, height: 'auto', marginTop: 8 }}
+                                                                            exit={{ opacity: 0, height: 0, marginTop: 0 }}
+                                                                            transition={{ duration: 0.3 }}
+                                                                            className="overflow-hidden px-1"
+                                                                        >
+                                                                            <div className="bg-stone-50 border border-stone-200 rounded-xl p-4 space-y-3 relative before:absolute before:top-[-6px] before:left-6 before:w-3 before:h-3 before:bg-stone-50 before:border-l before:border-t before:border-stone-200 before:rotate-45">
+                                                                                <p className="text-sm text-stone-700 leading-relaxed">
+                                                                                    {frequenciaTextos[opcao].texto}
+                                                                                </p>
+                                                                                <div className="border-t border-stone-200 pt-3">
+                                                                                    <p className="text-sm italic text-rosa-forte font-medium leading-relaxed">
+                                                                                        "{frequenciaTextos[opcao].reflexao}"
+                                                                                    </p>
+                                                                                </div>
+                                                                            </div>
+                                                                        </motion.div>
+                                                                    )}
+                                                                </AnimatePresence>
+                                                            </div>
+                                                        );
+                                                    })}
+                                                </div>
+
+                                                {/* Mensagem de erro inline */}
+                                                {frequenciaError && (
+                                                    <motion.p
+                                                        initial={{ opacity: 0, y: -5 }}
                                                         animate={{ opacity: 1, y: 0 }}
-                                                        exit={{ opacity: 0, y: -10 }}
-                                                        transition={{ duration: 0.3 }}
-                                                        className="bg-stone-50 border border-stone-200 rounded-xl p-4 space-y-3"
+                                                        className="text-red-500 text-xs mt-2 font-medium flex items-center gap-1"
                                                     >
-                                                        <p className="text-sm text-stone-700 leading-relaxed">
-                                                            {frequenciaTextos[frequenciaVisita].texto}
-                                                        </p>
-                                                        <div className="border-t border-stone-200 pt-3">
-                                                            <p className="text-sm italic text-rosa-forte font-medium leading-relaxed">
-                                                                "{frequenciaTextos[frequenciaVisita].reflexao}"
-                                                            </p>
-                                                        </div>
-                                                    </motion.div>
+                                                        <span className="inline-block w-1 h-1 bg-red-500 rounded-full" />
+                                                        Por favor, selecione uma opção para continuar.
+                                                    </motion.p>
                                                 )}
-                                            </AnimatePresence>
-
-                                            {/* Campo de Mensagem */}
+                                            </div>  {/* Campo de Mensagem */}
                                             <div>
                                                 <label className="block text-sm font-medium text-gray-700 mb-1">
                                                     Deixe uma mensagem para a Maria
