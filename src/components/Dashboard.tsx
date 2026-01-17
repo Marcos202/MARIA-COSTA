@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabaseClient';
 import type { Convidado } from '../types';
-import { Users, UserMinus, Clock, Search, Lock, Trash2 } from 'lucide-react';
+import { Users, UserMinus, Clock, Search, Lock, Trash2, Eye, X } from 'lucide-react';
 
 export const Dashboard = () => {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -9,6 +9,7 @@ export const Dashboard = () => {
     const [convidados, setConvidados] = useState<Convidado[]>([]);
     const [loading, setLoading] = useState(true);
     const [searchTerm, setSearchTerm] = useState('');
+    const [selectedMessage, setSelectedMessage] = useState<Convidado | null>(null);
 
     // Simple hardcoded password for demo purposes
     const ADMIN_PASSWORD = "maria90anos";
@@ -188,8 +189,24 @@ export const Dashboard = () => {
                                             </div>
                                         ) : '-'}
                                     </td>
-                                    <td className="px-6 py-3 text-gray-500 max-w-xs truncate" title={c.mensagem_justificativa || ''}>
-                                        {c.mensagem_justificativa || '-'}
+                                    <td className="px-6 py-3 text-gray-500 max-w-xs relative group cursor-default">
+                                        {c.mensagem_justificativa ? (
+                                            <div
+                                                onClick={() => setSelectedMessage(c)}
+                                                className="flex items-center gap-2 cursor-pointer hover:bg-gray-100/80 p-1.5 -ml-1.5 rounded-lg transition-all"
+                                                title="Clique para ler a mensagem completa"
+                                            >
+                                                <p className="truncate flex-1 font-normal group-hover:text-gray-800 transition-colors">
+                                                    {c.mensagem_justificativa}
+                                                </p>
+                                                <Eye
+                                                    size={16}
+                                                    className="text-gray-400 opacity-0 group-hover:opacity-100 group-hover:text-rosa-forte transition-all shrink-0 translate-x-1 group-hover:translate-x-0"
+                                                />
+                                            </div>
+                                        ) : (
+                                            <span className="text-gray-300 text-xs italic">-</span>
+                                        )}
                                     </td>
                                     <td className="px-6 py-3">
                                         <button
@@ -209,6 +226,50 @@ export const Dashboard = () => {
                     </table>
                 </div>
             </div>
+
+            {/* Message Modal */}
+            {selectedMessage && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-in fade-in duration-300">
+                    <div className="bg-white rounded-2xl shadow-2xl w-full max-w-lg overflow-hidden animate-in zoom-in-95 duration-300 scale-100 border border-gray-100">
+                        {/* Header */}
+                        <div className="p-5 border-b border-gray-100 flex justify-between items-center bg-gray-50/50">
+                            <div>
+                                <h3 className="font-serif text-xl text-gray-800">Mensagem de {selectedMessage.nome_completo.split(' ')[0]}</h3>
+                                {selectedMessage.created_at && (
+                                    <span className="text-xs text-gray-400 font-medium tracking-wide uppercase mt-1 block">
+                                        Enviada em {new Date(selectedMessage.created_at).toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' })}
+                                    </span>
+                                )}
+                            </div>
+                            <button
+                                onClick={() => setSelectedMessage(null)}
+                                className="p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-full transition-colors"
+                            >
+                                <X size={20} />
+                            </button>
+                        </div>
+
+                        {/* Body */}
+                        <div className="p-6 max-h-[60vh] overflow-y-auto custom-scrollbar">
+                            <div className="bg-stone-50 p-4 rounded-xl border border-stone-100">
+                                <p className="text-gray-700 leading-relaxed whitespace-pre-wrap font-sans text-base">
+                                    {selectedMessage.mensagem_justificativa}
+                                </p>
+                            </div>
+                        </div>
+
+                        {/* Footer */}
+                        <div className="p-4 border-t border-gray-100 bg-gray-50/50 flex justify-end">
+                            <button
+                                onClick={() => setSelectedMessage(null)}
+                                className="px-5 py-2 bg-white hover:bg-gray-50 border border-gray-200 text-gray-700 rounded-lg text-sm font-medium transition-all shadow-sm hover:shadow"
+                            >
+                                Fechar leitura
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };
