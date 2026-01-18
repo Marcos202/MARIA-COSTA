@@ -3,6 +3,7 @@ import { Home } from './pages/Home';
 import { ConfirmationPage } from './pages/ConfirmationPage';
 import { Dashboard } from './components/Dashboard';
 import { NavigationMenu } from './components/NavigationMenu';
+import { GenealogyPage } from './pages/GenealogyPage';
 
 function App() {
   return (
@@ -11,6 +12,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/confirmacao" element={<ConfirmationPage />} />
+        <Route path="/genealogica" element={<GenealogyPage />} />
         <Route path="/admin" element={<Dashboard />} />
       </Routes>
     </Router>
