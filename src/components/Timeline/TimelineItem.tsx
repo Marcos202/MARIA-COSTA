@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { User, ChevronDown, ChevronUp, Quote } from 'lucide-react';
-import { differenceInYears, parseISO } from 'date-fns';
+import { differenceInYears, differenceInMonths, parseISO } from 'date-fns';
 import type { FamilyMember } from '../../types';
 
 interface TimelineItemProps {
@@ -17,18 +17,28 @@ export const TimelineItem = ({ member, index, isLeft, parentName }: TimelineItem
     const birthYear = member.birth_date ? member.birth_date.split('-')[0] : null;
     const deathYear = member.death_date ? member.death_date.split('-')[0] : null;
 
-    const calculateAge = () => {
+    const getAgeString = () => {
         if (!member.birth_date) return null;
         try {
             const birthDate = parseISO(member.birth_date);
             const endDate = member.death_date ? parseISO(member.death_date) : new Date();
-            return differenceInYears(endDate, birthDate);
+
+            const years = differenceInYears(endDate, birthDate);
+            const months = differenceInMonths(endDate, birthDate);
+
+            if (years === 0) {
+                return `${months} ${months === 1 ? 'mês' : 'meses'}`;
+            } else if (years === 1) {
+                return "1 ano";
+            } else {
+                return `${years} anos`;
+            }
         } catch (e) {
             return null;
         }
     };
 
-    const age = calculateAge();
+    const ageString = getAgeString();
 
     return (
         <motion.div
@@ -69,11 +79,6 @@ export const TimelineItem = ({ member, index, isLeft, parentName }: TimelineItem
                                     Matriarca
                                 </span>
                             )}
-                            {member.is_deceased && (
-                                <span className="bg-gray-100 text-gray-600 text-[8px] md:text-[10px] font-bold px-1.5 md:px-2 py-0.5 rounded uppercase tracking-wider">
-                                    In Memoriam
-                                </span>
-                            )}
                         </div>
 
                         {/* Conteúdo Principal */}
@@ -98,12 +103,11 @@ export const TimelineItem = ({ member, index, isLeft, parentName }: TimelineItem
                                 <h3 className="font-serif text-xs md:text-xl lg:text-2xl text-stone-800 truncate mb-0.5 md:mb-1">
                                     {member.name}
                                 </h3>
-                                <div className="text-[10px] md:text-sm text-rose-500 font-medium whitespace-nowrap">
-                                    {member.is_deceased ? (
-                                        <span>★ {birthYear} — ✝ {deathYear}</span>
-                                    ) : (
-                                        <span>{age} anos</span>
+                                <div className="text-[10px] md:text-sm text-rose-500 font-medium">
+                                    {member.is_deceased && (
+                                        <div className="whitespace-nowrap">★ {birthYear} — ✝ {deathYear}</div>
                                     )}
+                                    {ageString && <div>{ageString}</div>}
                                 </div>
                             </div>
                         </div>
