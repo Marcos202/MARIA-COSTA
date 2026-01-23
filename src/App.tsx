@@ -4,6 +4,7 @@ import { ConfirmationPage } from './pages/ConfirmationPage';
 import { Dashboard } from './components/Dashboard';
 import { NavigationMenu } from './components/NavigationMenu';
 import { GenealogyPage } from './pages/GenealogyPage';
+import { TimelinePage } from './pages/TimelinePage';
 
 function App() {
   return (
@@ -13,6 +14,7 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/confirmacao" element={<ConfirmationPage />} />
         <Route path="/genealogica" element={<GenealogyPage />} />
+        <Route path="/linhagem" element={<TimelinePage />} />
         <Route path="/admin" element={<Dashboard />} />
       </Routes>
     </Router>

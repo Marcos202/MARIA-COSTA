@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Menu, Lock } from 'lucide-react';
+import { Menu, Lock, History, Network } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link } from 'react-router-dom';
 
@@ -28,6 +28,30 @@ export const NavigationMenu = () => {
                         transition={{ duration: 0.2, ease: "easeOut" }}
                         className="absolute top-full right-0 mt-2 w-48 bg-white rounded-xl shadow-lg p-2 border border-gray-100 origin-top-right z-50"
                     >
+                        <Link
+                            to="/genealogica"
+                            onClick={() => setIsOpen(false)}
+                            className="flex items-center gap-3 w-full p-2 rounded-lg hover:bg-rosa-claro/30 text-stone-600 hover:text-vinho transition-colors group text-left"
+                            role="menuitem"
+                        >
+                            <div className="p-1.5 bg-gray-50 rounded-md group-hover:bg-white transition-colors text-vinho">
+                                <Network size={16} />
+                            </div>
+                            <span className="text-sm font-medium">Árvore Genealógica</span>
+                        </Link>
+
+                        <Link
+                            to="/linhagem"
+                            onClick={() => setIsOpen(false)}
+                            className="flex items-center gap-3 w-full p-2 rounded-lg hover:bg-rosa-claro/30 text-stone-600 hover:text-vinho transition-colors group text-left"
+                            role="menuitem"
+                        >
+                            <div className="p-1.5 bg-gray-50 rounded-md group-hover:bg-white transition-colors text-vinho">
+                                <History size={16} />
+                            </div>
+                            <span className="text-sm font-medium">Linha do Tempo</span>
+                        </Link>
+
                         <Link
                             to="/admin"
                             onClick={() => setIsOpen(false)}
