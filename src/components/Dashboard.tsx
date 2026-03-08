@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabaseClient';
 import type { Convidado } from '../types';
-import { Users, UserMinus, Clock, Search, Lock, Trash2, Eye, X, Network } from 'lucide-react';
+import { Users, UserMinus, Clock, Search, Lock, Trash2, Eye, X, Network, CheckCircle } from 'lucide-react';
 import { AdminFamilyTree } from './FamilyTree/AdminFamilyTree';
 
 export const Dashboard = () => {
@@ -12,17 +12,13 @@ export const Dashboard = () => {
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedMessage, setSelectedMessage] = useState<Convidado | null>(null);
     const [activeTab, setActiveTab] = useState<'rsvp' | 'tree'>('rsvp');
+    const [lastSyncDate, setLastSyncDate] = useState<string | null>(null);
 
     // Simple hardcoded password for demo purposes
     const ADMIN_PASSWORD = "maria90anos";
 
-    useEffect(() => {
-        if (isAuthenticated) {
-            fetchConvidados();
-        }
-    }, [isAuthenticated]);
-
     const fetchConvidados = async () => {
+        await Promise.resolve(); // Resolves ESLint set-state-in-effect
         setLoading(true);
         const { data, error } = await supabase
             .from('convidados')
@@ -35,6 +31,42 @@ export const Dashboard = () => {
             setConvidados(data || []);
         }
         setLoading(false);
+    };
+
+    const fetchSyncDate = async () => {
+        try {
+            const { data, error } = await supabase
+                .from('atualizacao')
+                .select('ultima_atividade')
+                .eq('id', 1)
+                .single();
+
+            if (!error && data) {
+                setLastSyncDate(data.ultima_atividade);
+            }
+        } catch (err) {
+            console.error('Erro ao buscar atualizacao:', err);
+        }
+    };
+
+    useEffect(() => {
+        if (isAuthenticated) {
+            // eslint-disable-next-line react-hooks/set-state-in-effect
+            fetchConvidados();
+            fetchSyncDate();
+        }
+    }, [isAuthenticated]);
+
+    const formatSyncDate = (isoString: string) => {
+        try {
+            const date = new Date(isoString);
+            return date.toLocaleDateString('pt-BR', {
+                day: '2-digit', month: '2-digit', year: 'numeric',
+                hour: '2-digit', minute: '2-digit'
+            });
+        } catch {
+            return isoString;
+        }
     };
 
     const handleLogin = (e: React.FormEvent) => {
@@ -103,7 +135,22 @@ export const Dashboard = () => {
     return (
         <div className="p-4 md:p-8 max-w-7xl mx-auto">
             <div className="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
-                <h1 className="text-3xl font-serif text-rosa-forte">Painel Administrativo</h1>
+                <div className="flex items-center gap-3">
+                    <h1 className="text-3xl font-serif text-rosa-forte">Painel Administrativo</h1>
+                    {/* Database Sync Indicator */}
+                    {lastSyncDate && (
+                        <div className="group relative flex items-center gap-1.5 px-3 py-1 bg-white border border-stone-200 text-stone-600 rounded-full cursor-default shadow-sm hover:border-stone-300 transition-colors">
+                            <CheckCircle size={14} className="text-green-500" />
+                            <span className="text-xs font-medium tracking-wide">Sistema Ativo</span>
+
+                            {/* Tooltip */}
+                            <div className="absolute top-full left-1/2 -translate-x-1/2 mt-2 px-3 py-1.5 bg-stone-800 text-stone-100 text-[10px] md:text-xs rounded shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all whitespace-nowrap z-50">
+                                Sincronizado em: {formatSyncDate(lastSyncDate)}
+                                <div className="absolute bottom-full left-1/2 -translate-x-1/2 border-4 border-transparent border-b-stone-800" />
+                            </div>
+                        </div>
+                    )}
+                </div>
                 <div className="flex gap-2 bg-gray-100 p-1 rounded-lg">
                     <button
                         onClick={() => setActiveTab('rsvp')}
